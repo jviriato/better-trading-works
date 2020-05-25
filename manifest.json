@@ -15,6 +15,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.tradingworks.net/*"],
+      "js": ["background.js"]
     }
   ]
 }
