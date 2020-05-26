@@ -7,22 +7,22 @@ chrome.storage.sync.get(['working_hours'], function (result) {
 
 var headers = document.getElementsByTagName('th');
 var table = document.getElementsByTagName('td');
-var ht_index_morning = 0;
+var ht_morning_index = 0;
 
 for (let i = 0; i < headers.length; i++) {
   if(headers[i].innerHTML == "HT") {
-    ht_index_morning = i - 1; // Necessário pois o primeiro th não faz parte da tabela
+    ht_morning_index = i - 1; // Necessário pois o primeiro th não faz parte da tabela
   }
 }
 
 var clock = `<i class="fa fa-clock-o fa-fw fa-lg" style="color: tomato; opacity: 0.4" title="Original"></i>`
-var ht_index_afternoon = ht_index_morning + 4;
-var first_afternoon_hour_index = ht_index_morning + 2;
-var last_afternoon_hour_index = ht_index_morning + 3;
-var last_morning_hour_index = ht_index_morning - 1;
+var ht_afternoon_index = ht_morning_index + 4;
+var first_afternoon_hour_index = ht_morning_index + 2;
+var last_afternoon_hour_index = ht_morning_index + 3;
+var last_morning_hour_index = ht_morning_index - 1;
 
-var ht_morning = moment(table[ht_index_morning].innerHTML, 'HH:mm A')
-var ht_afternoon = moment(table[ht_index_afternoon].innerHTML, 'HH:mm A')
+var ht_morning = moment(table[ht_morning_index].innerHTML, 'HH:mm A')
+var ht_afternoon = moment(table[ht_afternoon_index].innerHTML, 'HH:mm A')
 var ht_afternoon_formated = ht_afternoon.format('HH:mm [ h]')
 
 var last_morning_hour = moment(table[last_morning_hour_index].innerHTML, 'HH:mm A');
