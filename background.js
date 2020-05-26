@@ -49,7 +49,7 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     var suggested_hour = first_afternoon_hour.add(minutes, 'minutes').format('HH:mm[ h]');
     table[last_afternoon_hour_index].innerHTML = clock + `<span style="color: gray; opacity: 0.4;">${suggested_hour}</span>`
     table[last_afternoon_hour_index].setAttribute('title', 'Hora Sugerida');
-    var td = `<td class="text-left" style="white-space: nowrap" title="Hora Sugerida">${clock}<span style="color: gray; opacity: 0.4;">${worked_hours}</span></td>`
+    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray; opacity: 0.4;">${worked_hours}</span></td>`
     table[last_afternoon_hour_index].insertAdjacentHTML('afterend', td);
   }
 });
