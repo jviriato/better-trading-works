@@ -1,7 +1,7 @@
 import moment from 'moment'
 var working_hours = 8;
 chrome.storage.sync.get(['working_hours'], function (result) {
-  working_hours = result.working_hours;
+  working_hours = result.working_hours || 8;
   // alert('Value currently is ' + result.working_hours);
 });
 
@@ -15,30 +15,33 @@ for (let i = 0; i < headers.length; i++) {
   }
 }
 
-var ht_index_afternoon = ht_index_morning + 4;
 var clock = `<i class="fa fa-clock-o fa-fw fa-lg" style="color: tomato; opacity: 0.4" title="Original"></i>`
-var ht_morning_raw = table[ht_index_morning].innerHTML
-var ht_index_afternoon_raw = table[ht_index_afternoon].innerHTML
+var ht_index_afternoon = ht_index_morning + 4;
+var first_afternoon_hour_index = ht_index_morning + 2;
+var last_afternoon_hour_index = ht_index_morning + 3;
+var last_morning_hour_index = ht_index_morning - 1;
 
-var ht_morning = moment(ht_morning_raw, 'HH:mm A')
-var ht_afternoon = moment(ht_index_afternoon_raw, 'HH:mm A')
+var ht_morning = moment(table[ht_index_morning].innerHTML, 'HH:mm A')
+var ht_afternoon = moment(table[ht_index_afternoon].innerHTML, 'HH:mm A')
 var ht_afternoon_formated = ht_afternoon.format('HH:mm [ h]')
-var first_afternoon_hour = ht_index_morning + 2;
 
+var last_morning_hour = moment(table[last_morning_hour_index].innerHTML, 'HH:mm A');
+var first_afternoon_hour = moment(table[first_afternoon_hour_index].innerHTML, 'HH:mm A');
+var last_afternoon_hour = moment(table[last_afternoon_hour_index].innerHTML, 'HH:mm A');
 
-var last_index_morning_hour = ht_index_morning - 1;
-var last_morning_raw = table[last_index_morning_hour].innerHTML
-var last_morning_hour = moment(last_morning_raw, 'HH:mm A');
-
-if (!last_morning_hour.isValid()) {
+if (first_afternoon_hour.isValid() && !last_afternoon_hour.isValid()) {
+ // calcula restante. adiciona sugestão na batida de saída de tarde 
+ var duration = moment.duration({hours: ht_morning.hours(), minutes: ht_morning.minutes()})
+ var remaining_hours = moment(working_hours, 'H').subtract(duration).format('HH:mm[ h]');
+ 
+} else if (!last_morning_hour.isValid()) {
+  // adiciona sugestão de batida na volta do horário de almoço
   var suggested_hour = last_morning_hour.add('1', 'hour').format('HH:mm [ h]');
-  table[first_afternoon_hour].setAttribute('title', 'Hora Sugerida')
-  table[first_afternoon_hour].innerHTML = clock + `<span style="color: tomato; opacity: 0.4;">${suggested_hour}</span>`
+  table[first_afternoon_hour_index].setAttribute('title', 'Hora Sugerida')
+  table[first_afternoon_hour_index].innerHTML = clock + `<span style="color: tomato; opacity: 0.4;">${suggested_hour}</span>`
+} else {
+
 }
-var working_hours = 8;
-var realTime = '8';
-var duration = moment.duration({hours: ht_morning.hours(), minutes: ht_morning.minutes()})
-var remaining_hours = moment(realTime, 'H').subtract(duration).format('HH:mm[ h]');
 
 // const worked_hours = moment.duration(hoursDiff)
 // alert(working_hours)
