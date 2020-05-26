@@ -25,9 +25,8 @@ var first_afternoon_hour = ht_index_morning + 2;
 
 
 var last_index_morning_hour = ht_index_morning - 1;
-var last_morning_raw_index = table[ht_index_morning].innerHTML
-
-var last_morning_hour = moment(last_morning_raw_index, 'HH:mm A');
+var last_morning_raw = table[last_index_morning_hour].innerHTML
+var last_morning_hour = moment(last_morning_raw, 'HH:mm A');
 
 if (!last_morning_hour.isValid()) {
   var suggested_hour = last_morning_hour.add('1', 'hour').format('HH:mm [ h]');
