@@ -1,5 +1,7 @@
 import moment from 'moment'
+var working_hours = 8;
 chrome.storage.sync.get(['working_hours'], function (result) {
+  working_hours = result.working_hours;
   // alert('Value currently is ' + result.working_hours);
 });
 
@@ -33,3 +35,12 @@ if (!last_morning_hour.isValid()) {
   table[first_afternoon_hour].setAttribute('title', 'Hora Sugerida')
   table[first_afternoon_hour].innerHTML = clock + `<span style="color: tomato; opacity: 0.4;">${suggested_hour}</span>`
 }
+var working_hours = 8;
+var realTime = '8';
+var duration = moment.duration({hours: ht_morning.hours(), minutes: ht_morning.minutes()})
+var remaining_hours = moment(realTime, 'H').subtract(duration).format('HH:mm[ h]');
+
+// const worked_hours = moment.duration(hoursDiff)
+// alert(working_hours)
+// alert(ht_morning.format('HH:mm [ h]'))
+alert(remaining_hours)
