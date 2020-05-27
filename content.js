@@ -10,11 +10,11 @@ var last_morning_hour_index = 2;
 var first_afternoon_hour_index = 5;
 var last_afternoon_hour_index = 6;
 
-var first_morning_hour = moment(table[first_morning_hour_index].innerHTML, 'HH:mm A');
-var last_morning_hour = moment(table[last_morning_hour_index].innerHTML, 'HH:mm A');
+var first_morning_hour = moment(table[first_morning_hour_index]?.innerHTML, 'HH:mm A');
+var last_morning_hour = moment(table[last_morning_hour_index]?.innerHTML, 'HH:mm A');
 
-var first_afternoon_hour = moment(table[first_afternoon_hour_index].innerHTML, 'HH:mm A');
-var last_afternoon_hour = moment(table[last_afternoon_hour_index].innerHTML, 'HH:mm A');
+var first_afternoon_hour = moment(table[first_afternoon_hour_index]?.innerHTML, 'HH:mm A');
+var last_afternoon_hour = moment(table[last_afternoon_hour_index]?.innerHTML, 'HH:mm A');
 
 
 for (let i = 0; i < headers.length; i++) {
@@ -39,12 +39,12 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     morning.className = 'text-center'
     morning_first_hour.className = 'text-left'
     morning_second_hour.className = 'text-left'
-    morning_ht.className = 'text-center'
+    morning_ht.className = 'text-left'
 
     morning.appendChild(document.createTextNode(label))
-    morning_first_hour.innerHTML = clock + first_hour;
-    morning_second_hour.innerHTML = clock + second_hour
-    morning_ht.innerHTML = ht
+    morning_first_hour.innerHTML = clock + '<span style="color: gray !important; opacity: 0.4 !important;"> '  + first_hour  + '</span>';
+    morning_second_hour.innerHTML = clock + '<span style="color: gray !important; opacity: 0.4 !important;"> ' + second_hour + '</span>';
+    morning_ht.innerHTML = '<span style="color: gray !important; opacity: 0.4 !important;">' + ht + '</span>'
 
     morning_tr.appendChild(morning)
     morning_tr.appendChild(morning_first_hour)
@@ -70,9 +70,9 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     var suggested_hour = first_morning_hour.add(halftime, 'hours').format('HH:mm');
     var suggested_hour_moment = first_morning_hour.add(halftime, 'hours')
     var worked_hours = moment(halftime, 'H').format('HH:mm[ h]')
-    table[last_morning_hour_index].innerHTML = clock + `<span style="color: gray; opacity: 0.4;"> ${suggested_hour}</span>`
+    table[last_morning_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour}</span>`
     table[last_morning_hour_index].setAttribute('title', 'Hora Sugerida');
-    var td = `<td class="text-left" style="white-space: nowrap" title="Hora Sugerida">${clock}<span style="color: gray; opacity: 0.4;">${worked_hours}</span></td>`
+    var td = `<td class="text-left" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
     table[last_morning_hour_index].insertAdjacentHTML('afterend', td);
     insertRow('Tarde', suggested_hour_moment.add(1, 'hours').format('HH:mm'),
       suggested_hour_moment.add(halftime, 'hours').format('HH:mm'),
@@ -86,9 +86,9 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     var remaining_hours = moment(working_hours, 'H').subtract(duration);
     var minutes = remaining_hours.hours() * 60 + remaining_hours.minutes();
     var suggested_hour = first_afternoon_hour.add(minutes, 'minutes').format('HH:mm');
-    table[last_afternoon_hour_index].innerHTML = clock + `<span style="color: gray; opacity: 0.4;"> ${suggested_hour}</span>`
+    table[last_afternoon_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour}</span>`
     table[last_afternoon_hour_index].setAttribute('title', 'Hora Sugerida');
-    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray; opacity: 0.4;">${worked_hours}</span></td>`
+    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida">${clock}<span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
     table[last_afternoon_hour_index].insertAdjacentHTML('afterend', td);
   }
 });

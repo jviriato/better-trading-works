@@ -3,10 +3,10 @@ var webpack = require('webpack');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 module.exports = {
-    entry: './background.js',
+    entry: './content.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'background.bundle.js'
+        filename: 'content.bundle.js'
     },
     plugins: [
         new MomentLocalesPlugin({
