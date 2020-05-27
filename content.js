@@ -15,13 +15,7 @@ var last_morning_hour = moment(table[last_morning_hour_index]?.innerHTML, 'HH:mm
 
 var first_afternoon_hour = moment(table[first_afternoon_hour_index]?.innerHTML, 'HH:mm A');
 var last_afternoon_hour = moment(table[last_afternoon_hour_index]?.innerHTML, 'HH:mm A');
-
-
-for (let i = 0; i < headers.length; i++) {
-  if (headers[i].innerHTML == "HT") {
-    ht_morning_index = i - 1; // Necessário pois o primeiro th não faz parte da tabela
-  }
-}
+var ht_morning_index = 3;
 var ht_morning = moment(table[ht_morning_index].innerHTML, 'HH:mm A');
 
 chrome.storage.sync.get(['working_hours'], function (result) {
@@ -39,10 +33,10 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     morning.className = 'text-center'
     morning_first_hour.className = 'text-left'
     morning_second_hour.className = 'text-left'
-    morning_ht.className = 'text-left'
+    morning_ht.className = 'text-center'
 
     morning.appendChild(document.createTextNode(label))
-    morning_first_hour.innerHTML = clock + '<span style="color: gray !important; opacity: 0.4 !important;"> '  + first_hour  + '</span>';
+    morning_first_hour.innerHTML = clock + '<span style="color: gray !important; opacity: 0.4 !important;"> ' + first_hour + '</span>';
     morning_second_hour.innerHTML = clock + '<span style="color: gray !important; opacity: 0.4 !important;"> ' + second_hour + '</span>';
     morning_ht.innerHTML = '<span style="color: gray !important; opacity: 0.4 !important;">' + ht + '</span>'
 
@@ -65,19 +59,30 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     );
   }
   // Quando há apenas a primeira batida
-  // TODO: inserir "Tarde"
   else if (first_morning_hour.isValid() && !last_morning_hour.isValid()) {
-    var suggested_hour = first_morning_hour.add(halftime, 'hours').format('HH:mm');
-    var suggested_hour_moment = first_morning_hour.add(halftime, 'hours')
+    var suggested_hour = first_morning_hour.add(halftime, 'hours')
     var worked_hours = moment(halftime, 'H').format('HH:mm[ h]')
-    table[last_morning_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour}</span>`
+    table[last_morning_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour.format('HH:mm')}</span>`
     table[last_morning_hour_index].setAttribute('title', 'Hora Sugerida');
     var td = `<td class="text-left" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
     table[last_morning_hour_index].insertAdjacentHTML('afterend', td);
-    insertRow('Tarde', suggested_hour_moment.add(1, 'hours').format('HH:mm'),
-      suggested_hour_moment.add(halftime, 'hours').format('HH:mm'),
+    insertRow('Tarde', suggested_hour.add(1, 'hours').format('HH:mm'),
+      suggested_hour.add(halftime, 'hours').format('HH:mm'),
       moment(working_hours, 'H').format('HH:mm[ h]')
     );
+  }
+  // Quando é intervalo de almoço
+  else if (last_morning_hour.isValid() && !first_afternoon_hour.isValid()) {
+    var x = last_morning_hour.clone().add(1, 'hours');
+    var duration = moment.duration({ hours: ht_morning.hours(), minutes: ht_morning.minutes() })
+    var remaining_hours = moment(working_hours, 'H').subtract(duration);
+    var minutes = remaining_hours.hours() * 60 + remaining_hours.minutes();
+    var suggested_hour = x.add(minutes, 'minutes').format('HH:mm');
+
+    insertRow('Tarde', last_morning_hour.add(1, 'hours').format('HH:mm'),
+      suggested_hour,
+      moment(working_hours, 'H').format('HH:mm[ h]'))
+
   }
   // Quando falta a última batida
   else if (first_afternoon_hour.isValid() && !last_afternoon_hour.isValid()) {
