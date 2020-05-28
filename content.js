@@ -64,7 +64,7 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     var worked_hours = moment(halftime, 'H').format('HH:mm[ h]')
     table[last_morning_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour.format('HH:mm')}</span>`
     table[last_morning_hour_index].setAttribute('title', 'Hora Sugerida');
-    var td = `<td class="text-left" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
+    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
     table[last_morning_hour_index].insertAdjacentHTML('afterend', td);
     insertRow('Tarde', suggested_hour.add(1, 'hours').format('HH:mm'),
       suggested_hour.add(halftime, 'hours').format('HH:mm'),
@@ -93,7 +93,7 @@ chrome.storage.sync.get(['working_hours'], function (result) {
     var suggested_hour = first_afternoon_hour.add(minutes, 'minutes').format('HH:mm');
     table[last_afternoon_hour_index].innerHTML = clock + `<span style="color: gray !important; opacity: 0.4 !important;"> ${suggested_hour}</span>`
     table[last_afternoon_hour_index].setAttribute('title', 'Hora Sugerida');
-    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida">${clock}<span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
+    var td = `<td class="text-center" style="white-space: nowrap" title="Hora Sugerida"><span style="color: gray !important; opacity: 0.4 !important;">${worked_hours}</span></td>`
     table[last_afternoon_hour_index].insertAdjacentHTML('afterend', td);
   }
 });
