@@ -20,4 +20,3 @@ Para compilar, execute o comando:
 
 
 # 
-Icone feito por Freepik.
